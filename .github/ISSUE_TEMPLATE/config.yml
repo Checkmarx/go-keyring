@@ -1,0 +1,16 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Issue ownership for this fork
+    url: https://github.com/CheckmarxDev/go-keyring/issues
+    about: >
+      This repository is a Checkmarx-maintained fork of zalando/go-keyring. All
+      issues and pull requests for this fork are owned by Checkmarx — please do
+      not file them against zalando/go-keyring.
+  - name: Report a security vulnerability
+    url: https://github.com/CheckmarxDev/go-keyring/security/policy
+    about: >
+      Do not open a public issue for security problems. Follow the Checkmarx
+      security policy instead.
+  - name: Contributing guidelines
+    url: https://github.com/CheckmarxDev/go-keyring/blob/master/CONTRIBUTING.md
+    about: Read this before opening a pull request (DCO sign-off is required).

@@ -1,0 +1,61 @@
+name: Checkmarx One Scan
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checkmarx-one-scan:
+    name: Checkmarx One Scan
+    runs-on: cx-private-ubuntu-x64
+
+    permissions:
+      contents: read
+      # Required for the OIDC token exchange used to assume the AWS role that
+      # reads the Checkmarx One credentials from AWS Secrets Manager.
+      id-token: write
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # TODO: confirm the action path, ref, and SHA pin against the reference
+      # implementation (Checkmarx/sspi#1 / Checkmarx/ast-cx-hooks master).
+      - name: Get Checkmarx One secrets
+        id: secrets
+        uses: CheckmarxDev/gh-actions-library/get-secrets@main # TODO: confirm path + pin to SHA
+        with:
+          # TODO: confirm the secret ids / key names used by the shared action.
+          secrets: |
+            AST_RND_SCANS_CLIENT_ID
+            AST_RND_SCANS_CLIENT_SECRET
+            AST_RND_SCANS_BASE_URI
+            AST_RND_SCANS_TENANT
+
+      # TODO: confirm the ast-github-action version and pin to its SHA.
+      - name: Run Checkmarx One scan
+        uses: checkmarx/ast-github-action@main # TODO: pin to SHA
+        with:
+          project_name: go-keyring
+          branch: ${{ github.ref_name }}
+          cx_client_id: ${{ steps.secrets.outputs.AST_RND_SCANS_CLIENT_ID }}
+          cx_client_secret: ${{ steps.secrets.outputs.AST_RND_SCANS_CLIENT_SECRET }}
+          base_uri: ${{ steps.secrets.outputs.AST_RND_SCANS_BASE_URI }}
+          cx_tenant: ${{ steps.secrets.outputs.AST_RND_SCANS_TENANT }}
+          additional_params: >-
+            --scan-types sast,sca,iac-security,secret-detection
+            --threshold "sast-high=1;sast-medium=1;sca-high=1;sca-medium=1"
+            --report-format sarif
+            --output-path .

@@ -1,0 +1,78 @@
+name: DCO
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  dco-check:
+    name: Check Signed-off-by
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify every commit is signed off
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          commits="$(git rev-list "${BASE_SHA}..${HEAD_SHA}")"
+          if [ -z "${commits}" ]; then
+            echo "No commits to check."
+            exit 0
+          fi
+
+          failed=0
+          while read -r sha; do
+            [ -n "${sha}" ] || continue
+
+            # Merge commits are created by GitHub and are not signed off.
+            if [ "$(git rev-list --parents -n 1 "${sha}" | wc -w)" -gt 2 ]; then
+              echo "skip   ${sha} (merge commit)"
+              continue
+            fi
+
+            author="$(git show -s --format='%an <%ae>' "${sha}")"
+            if git show -s --format='%B' "${sha}" \
+              | grep -qiE "^Signed-off-by: .+ <.+@.+>$"; then
+              echo "ok     ${sha} ${author}"
+            else
+              echo "FAIL   ${sha} ${author}"
+              failed=1
+            fi
+          done <<< "${commits}"
+
+          if [ "${failed}" -ne 0 ]; then
+            cat <<'EOF'
+
+          One or more commits are missing a Signed-off-by line.
+
+          All contributions must certify the Developer Certificate of Origin
+          (https://developercertificate.org/). Sign off new commits with:
+
+              git commit -s -m "your message"
+
+          To fix an existing branch, rebase with sign-off and force-push:
+
+              git rebase --signoff <base-branch>
+              git push --force-with-lease
+
+          EOF
+            exit 1
+          fi
+
+          echo "All commits are signed off."
