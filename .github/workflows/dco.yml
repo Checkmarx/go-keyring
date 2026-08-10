@@ -7,10 +7,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   dco-check:
     name: Check Signed-off-by
-    runs-on: ubuntu-latest
+    runs-on: cx-private-ubuntu-x64
 
     permissions:
       contents: read
