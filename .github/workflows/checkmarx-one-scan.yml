@@ -30,7 +30,7 @@ jobs:
           persist-credentials: false
 
       - name: Checkmarx One CLI Action
-        uses: checkmarx/ast-github-action@ef93013c95adc60160bc22060875e90800d3ecfc # v2.3.19
+        uses: checkmarx/ast-github-action@327efb5d1dd16ac6c7c21a9ff8ec1e8ec393b5e6 # CLI 2.3.46 update; CheckmarxDev org-standard pin
         with:
           base_uri: ${{ secrets.AST_RND_SCANS_BASE_URI }}
           cx_tenant: ${{ secrets.AST_RND_SCANS_TENANT }}
