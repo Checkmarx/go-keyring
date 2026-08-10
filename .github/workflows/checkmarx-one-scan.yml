@@ -1,11 +1,12 @@
 name: Checkmarx One Scan
 
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
-  workflow_dispatch:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '00 7 * * *' # Every day at 07:00
 
 permissions:
   contents: read
@@ -15,47 +16,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  checkmarx-one-scan:
+  cx-scan:
     name: Checkmarx One Scan
-    runs-on: cx-private-ubuntu-x64
-
-    permissions:
-      contents: read
-      # Required for the OIDC token exchange used to assume the AWS role that
-      # reads the Checkmarx One credentials from AWS Secrets Manager.
-      id-token: write
-
+    runs-on: cx-public-ubuntu-x64
     steps:
-      - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v6
         with:
           persist-credentials: false
 
-      # TODO: confirm the action path, ref, and SHA pin against the reference
-      # implementation (Checkmarx/sspi#1 / Checkmarx/ast-cx-hooks master).
-      - name: Get Checkmarx One secrets
-        id: secrets
-        uses: CheckmarxDev/gh-actions-library/get-secrets@main # TODO: confirm path + pin to SHA
+      - name: Checkmarx One CLI Action
+        uses: checkmarx/ast-github-action@ef93013c95adc60160bc22060875e90800d3ecfc # v2.3.19
         with:
-          # TODO: confirm the secret ids / key names used by the shared action.
-          secrets: |
-            AST_RND_SCANS_CLIENT_ID
-            AST_RND_SCANS_CLIENT_SECRET
-            AST_RND_SCANS_BASE_URI
-            AST_RND_SCANS_TENANT
-
-      # TODO: confirm the ast-github-action version and pin to its SHA.
-      - name: Run Checkmarx One scan
-        uses: checkmarx/ast-github-action@main # TODO: pin to SHA
-        with:
-          project_name: go-keyring
-          branch: ${{ github.ref_name }}
-          cx_client_id: ${{ steps.secrets.outputs.AST_RND_SCANS_CLIENT_ID }}
-          cx_client_secret: ${{ steps.secrets.outputs.AST_RND_SCANS_CLIENT_SECRET }}
-          base_uri: ${{ steps.secrets.outputs.AST_RND_SCANS_BASE_URI }}
-          cx_tenant: ${{ steps.secrets.outputs.AST_RND_SCANS_TENANT }}
+          base_uri: ${{ secrets.AST_RND_SCANS_BASE_URI }}
+          cx_tenant: ${{ secrets.AST_RND_SCANS_TENANT }}
+          cx_client_id: ${{ secrets.AST_RND_SCANS_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.AST_RND_SCANS_CLIENT_SECRET }}
           additional_params: >-
-            --scan-types sast,sca,iac-security,secret-detection
-            --threshold "sast-high=1;sast-medium=1;sca-high=1;sca-medium=1"
-            --report-format sarif
-            --output-path .
+            --tags sypher
+            --threshold "sca-critical=1;sca-high=1;sca-medium=1;sca-low=1;sast-critical=1;sast-high=1;sast-medium=1;sast-low=1;iac-security-critical=1;iac-security-high=1;iac-security-medium=1;iac-security-low=1"
