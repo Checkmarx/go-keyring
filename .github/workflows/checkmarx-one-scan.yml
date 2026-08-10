@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - master
+      # TEMPORARY: run the scan on the release-prep test branch so the
+      # changes are scanned on push, before any PR is opened.
+      # Remove this entry after the branch is merged.
+      - chore/GHA-301827-release-prep-scan
   schedule:
     - cron: '00 7 * * *' # Every day at 07:00
 
