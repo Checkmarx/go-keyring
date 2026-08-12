@@ -13,6 +13,5 @@ propose changes.
 ## Upstream
 
 This project is a fork of [zalando/go-keyring](https://github.com/zalando/go-keyring).
-The original maintainer list is preserved unmodified at
-[docs/upstream/MAINTAINERS](docs/upstream/MAINTAINERS). Issues and pull requests
-for this fork are owned by Checkmarx and should not be filed upstream.
+Issues and pull requests for this fork are owned by Checkmarx and should not be
+filed upstream.

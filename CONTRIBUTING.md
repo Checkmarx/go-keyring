@@ -69,9 +69,3 @@ pre-commit install
 Do not report security vulnerabilities through public GitHub issues. Follow the
 Checkmarx organization security policy linked from this repository's **Security**
 tab.
-
-## Upstream policy
-
-The original Zalando contributing guidelines are preserved unmodified at
-[docs/upstream/CONTRIBUTING.md](docs/upstream/CONTRIBUTING.md) for reference. The
-document you are reading supersedes them for this fork.
