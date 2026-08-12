@@ -12,7 +12,7 @@ permissions:
 jobs:
   build-linux:
     name: Build (ubuntu-latest)
-    runs-on: ubuntu-latest
+    runs-on: cx-private-ubuntu-x64
     container:
       image: ubuntu:latest
       options: --privileged
@@ -89,7 +89,7 @@ jobs:
   build-freebsd:
     name: Build (FreeBSD)
     # runs-on: macos-12
-    runs-on: ubuntu-latest
+    runs-on: cx-private-ubuntu-x64
 
     permissions:
       contents: read
@@ -98,7 +98,7 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
     - name: Test in FreeBSD
       id: test
-      uses: vmactions/freebsd-vm@v1
+      uses: step-security/freebsd-vm@f49184475ccc5bb96cb193618fc7af960edf8582 # v1.5.2
       with:
         usesh: true
         prepare: pkg install -y go gnome-keyring
