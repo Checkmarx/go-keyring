@@ -1,2 +1,21 @@
-Mikkel Oscar Lyderik Larsen <mikkel.larsen@zalando.de>
-Sandor Szücs <sandor.szuecs@zalando.de>
+# Maintainers
+
+This repository is maintained by Checkmarx.
+
+| Maintainer | GitHub | Role |
+| --- | --- | --- |
+| Sypher Team | [@Checkmarx/ast-sypher-team](https://github.com/orgs/Checkmarx/teams/ast-sypher-team) | Owning team |
+| Anurag Dalke | [@cx-anurag-dalke](https://github.com/cx-anurag-dalke) | Maintainer |
+| Amol Mane | [@cx-amol-mane](https://github.com/cx-amol-mane) | Maintainer |
+| Prathmesh Borle | [@cx-prathmesh-borle](https://github.com/cx-prathmesh-borle) | Maintainer |
+| Umesh Waghode | [@cx-umesh-waghode](https://github.com/cx-umesh-waghode) | Maintainer |
+
+Maintainers are responsible for reviewing and merging pull requests, triaging
+issues, and cutting releases. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to
+propose changes.
+
+## Upstream
+
+This project is a fork of [zalando/go-keyring](https://github.com/zalando/go-keyring).
+Issues and pull requests for this fork are owned by Checkmarx and should not be
+filed upstream.

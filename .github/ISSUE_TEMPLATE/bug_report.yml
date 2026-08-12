@@ -1,0 +1,112 @@
+name: Bug report
+description: Report a problem with go-keyring
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report.
+
+        Please do **not** report security vulnerabilities here — follow the
+        security policy linked from this repository's Security tab instead.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Minimal code sample or steps that reproduce the problem.
+      placeholder: |
+        1. Call keyring.Set("service", "user", "password")
+        2. Call keyring.Get("service", "user")
+        3. ...
+      render: go
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include the exact error returned, if any.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - FreeBSD
+        - Other BSD
+    validations:
+      required: true
+
+  - type: input
+    id: os_details
+    attributes:
+      label: OS version and architecture
+      placeholder: "Ubuntu 24.04, amd64"
+    validations:
+      required: true
+
+  - type: input
+    id: keyring_backend
+    attributes:
+      label: Keyring backend
+      description: >
+        Which credential store is in use, if known (GNOME Keyring, KWallet,
+        macOS Keychain, Windows Credential Manager, ...).
+      placeholder: "GNOME Keyring 46.1"
+
+  - type: input
+    id: go_version
+    attributes:
+      label: Go version
+      description: Output of `go version`.
+      placeholder: "go version go1.23.0 linux/amd64"
+    validations:
+      required: true
+
+  - type: input
+    id: library_version
+    attributes:
+      label: go-keyring version
+      description: Version or commit SHA you are using.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      description: Relevant output. This is rendered as code, no backticks needed.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: This report contains no secrets, credentials, or personal data.
+          required: true
